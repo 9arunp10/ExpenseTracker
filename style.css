@@ -1,13 +1,31 @@
+/* General body style */
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
   margin: 0;
   padding: 20px;
 }
+
+/* Container for center layout */
 .container {
-  max-width: 300px;
-  background: rgb(255, 255, 255);
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px #aaa;
+  max-width: 600px;
+  margin: auto;
+  background: white;
+  padding: 30px 25px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo styling */
+.logo {
+  margin-top: 0;
+  color: #e74c3c; /* Bright red */
+  font-size: 36px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.logo i {
+  color: #2ecc71;
+  margin-left: 10px;
 }

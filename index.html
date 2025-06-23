@@ -3,11 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>Expense Tracker</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div class="container">
-    <h1>Expense Tracker</h1>
+    <!-- App Header -->
+    <h1 class="logo">PEX <i class="fa-solid fa-wallet"></i></h1>
+
+    <!-- Budget Section -->
+    <div id="budget-section">
+      <label for="budget">Set Monthly Budget:</label>
+      <input type="number" id="budget" placeholder="e.g. 5000">
+      <button onclick="setBudget()">Set Budget</button>
+      <p id="budget-display">Budget: ₹0</p>
+    </div>
   </div>
 
   <script src="script.js"></script>
