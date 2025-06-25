@@ -41,7 +41,7 @@ body {
 }
 
 #budget-section input {
-  width: 100%;
+  width: 97%;
   padding: 10px;
   margin-top: 8px;
   margin-bottom: 12px;
@@ -72,3 +72,39 @@ body {
   font-weight: bold;
   color: #2c3e50;
 }
+
+#add-expense-section {
+  margin-top: 40px;
+}
+
+#add-expense-section h2 {
+  margin-bottom: 15px;
+  color: #2c3e50;
+}
+
+#add-expense-section input,
+#add-expense-section select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+#add-expense-section button {
+  width: 100%;
+  padding: 12px;
+  background-color: #27ae60;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#add-expense-section button:hover {
+  background-color: #219150;
+}
+

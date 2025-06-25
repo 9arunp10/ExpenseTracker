@@ -18,6 +18,24 @@
       <button onclick="setBudget()">Set Budget</button>
       <p id="budget-display">Budget: ₹0</p>
     </div>
+    <!-- Expense Section -->
+    <div id="add-expense-section">
+      <h2>Add Expense</h2>
+
+      <input type="text" id="desc" placeholder="Description">
+      <input type="number" id="amount" placeholder="Amount">
+
+      <select id="category">
+        <option>Food</option>
+        <option>Transport</option>
+        <option>Entertainment</option>
+        <option>Utilities</option>
+        <option>Other</option>
+      </select>
+
+      <button onclick="addExpense()">Add Expense</button>
+    </div>
+
   </div>
 
   <script src="script.js"></script>
