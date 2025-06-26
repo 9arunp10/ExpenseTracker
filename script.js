@@ -15,3 +15,20 @@ function setBudget() {
   // Clear the input field after setting
   budgetInput.value = "";
 }
+//  Add Expense Input Handler (basic skeleton)
+function addExpense() {
+  const desc = document.getElementById("desc").value;
+  const amount = parseFloat(document.getElementById("amount").value);
+  const category = document.getElementById("category").value;
+
+  if (!desc || isNaN(amount) || amount <= 0) {
+    alert("Please enter valid expense details.");
+    return;
+  }
+
+  console.log("Expense Added:", desc, amount, category);
+  
+  // Clear fields
+  document.getElementById("desc").value = "";
+  document.getElementById("amount").value = "";
+}
