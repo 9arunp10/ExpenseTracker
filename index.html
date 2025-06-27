@@ -18,11 +18,12 @@
       <button onclick="setBudget()">Set Budget</button>
       <p id="budget-display">Budget: ₹0</p>
     </div>
+
     <!-- Expense Section -->
     <div id="add-expense-section">
       <h2>Add Expense</h2>
 
-      <input type="text" id="desc" placeholder="Description">
+      <textarea id="desc" rows="2" placeholder="Enter expense details..."></textarea>
       <input type="number" id="amount" placeholder="Amount">
 
       <select id="category">
@@ -36,6 +37,9 @@
       <button onclick="addExpense()">Add Expense</button>
     </div>
 
+    <!-- Expense List Display -->
+    <h2>Expenses</h2>
+    <ul id="expense-list"></ul>
   </div>
 
   <script src="script.js"></script>

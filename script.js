@@ -16,6 +16,8 @@ function setBudget() {
   budgetInput.value = "";
 }
 //  Add Expense Input Handler (basic skeleton)
+let expenses = []; // global array to store expense data
+
 function addExpense() {
   const desc = document.getElementById("desc").value;
   const amount = parseFloat(document.getElementById("amount").value);
@@ -26,9 +28,30 @@ function addExpense() {
     return;
   }
 
-  console.log("Expense Added:", desc, amount, category);
-  
-  // Clear fields
+  const expense = {
+    description: desc,
+    amount: amount,
+    category: category,
+  };
+
+  expenses.push(expense); // add to global array
+  updateExpenseList();     // show on screen
+
+  // Clear inputs
   document.getElementById("desc").value = "";
   document.getElementById("amount").value = "";
+}
+
+function updateExpenseList() {
+  const list = document.getElementById("expense-list");
+  list.innerHTML = ""; // clear previous list
+
+  expenses.forEach((exp, index) => {
+    const item = document.createElement("li");
+    item.innerHTML = `
+      <strong>${exp.description}</strong><br>
+      ₹${exp.amount} <span class="category">[${exp.category}]</span>
+    `;
+    list.appendChild(item);
+  });
 }
