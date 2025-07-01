@@ -1,5 +1,7 @@
 // Set Budget and Show It
+let expenses = [];
 let budget = 0;
+
 function setBudget() {
   const budgetInput = document.getElementById("budget");
   const budgetValue = parseFloat(budgetInput.value);
@@ -8,16 +10,17 @@ function setBudget() {
     alert("Please enter a valid budget greater than 0.");
     return;
   }
+
   budget = budgetValue;
   // Show it on the page
-  const display = document.getElementById("budget-display");
-  display.textContent = `Budget: ₹${budget}`;
+  document.getElementById("budget-display").textContent = `Budget: ₹${budget}`;
+  updateSummary();
   // Clear the input field after setting
   budgetInput.value = "";
 }
-//  Add Expense Input Handler (basic skeleton)
-let expenses = []; // global array to store expense data
 
+//  Add Expense Input Handler (basic skeleton)
+// global array to store expense data
 function addExpense() {
   const desc = document.getElementById("desc").value;
   const amount = parseFloat(document.getElementById("amount").value);
@@ -28,15 +31,10 @@ function addExpense() {
     return;
   }
 
-  const expense = {
-    description: desc,
-    amount: amount,
-    category: category,
-  };
-
+  const expense = { description: desc, amount, category };
   expenses.push(expense); // add to global array
-  updateExpenseList();     // show on screen
-
+  updateExpenseList(); // show on screen
+  updateSummary();
   // Clear inputs
   document.getElementById("desc").value = "";
   document.getElementById("amount").value = "";
@@ -44,7 +42,7 @@ function addExpense() {
 
 function updateExpenseList() {
   const list = document.getElementById("expense-list");
-  list.innerHTML = ""; // clear previous list
+  list.innerHTML = "";  // clear previous list
 
   expenses.forEach((exp, index) => {
     const item = document.createElement("li");
@@ -54,4 +52,11 @@ function updateExpenseList() {
     `;
     list.appendChild(item);
   });
+}
+
+function updateSummary() {
+  const totalSpent = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+  document.getElementById("total-spent").textContent = totalSpent;
+  const remaining = budget - totalSpent;
+  document.getElementById("remaining").textContent = remaining >= 0 ? remaining : 0;
 }
