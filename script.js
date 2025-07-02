@@ -1,6 +1,20 @@
 // Set Budget and Show It
 let expenses = [];
 let budget = 0;
+// Load saved data on page load
+window.onload = function () {
+  if (localStorage.getItem("budget")) {
+    budget = parseFloat(localStorage.getItem("budget"));
+    document.getElementById("budget-display").textContent = `Budget: ₹${budget}`;
+  }
+
+  if (localStorage.getItem("expenses")) {
+    expenses = JSON.parse(localStorage.getItem("expenses"));
+    updateExpenseList();
+  }
+
+  updateSummary();
+};
 
 function setBudget() {
   const budgetInput = document.getElementById("budget");
@@ -12,6 +26,7 @@ function setBudget() {
   }
 
   budget = budgetValue;
+  localStorage.setItem("budget", budget); // 🔐 Save to localStorage
   // Show it on the page
   document.getElementById("budget-display").textContent = `Budget: ₹${budget}`;
   updateSummary();
@@ -33,6 +48,7 @@ function addExpense() {
 
   const expense = { description: desc, amount, category };
   expenses.push(expense); // add to global array
+  localStorage.setItem("expenses", JSON.stringify(expenses)); // 🔐 Save to localStorage
   updateExpenseList(); // show on screen
   updateSummary();
   // Clear inputs

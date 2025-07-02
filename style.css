@@ -131,3 +131,20 @@ h2 {
   font-weight: bold;
   font-size: 18px;
 }
+
+#reset-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 20px;
+  background-color: #e74c3c;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#reset-btn:hover {
+  background-color: #c0392b;
+}
