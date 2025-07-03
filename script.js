@@ -76,3 +76,19 @@ function updateSummary() {
   const remaining = budget - totalSpent;
   document.getElementById("remaining").textContent = remaining >= 0 ? remaining : 0;
 }
+
+function resetTracker() {
+  const confirmReset = confirm("Are you sure you want to clear all data?");
+  if (!confirmReset) return;
+
+  // Clear local storage and variables
+  localStorage.clear();
+  expenses = [];
+  budget = 0;
+
+  // Clear UI
+  document.getElementById("budget-display").textContent = "Budget: ₹0";
+  document.getElementById("expense-list").innerHTML = "";
+  document.getElementById("total-spent").textContent = "0";
+  document.getElementById("remaining").textContent = "0";
+}
