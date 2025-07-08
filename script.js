@@ -58,17 +58,34 @@ function addExpense() {
 
 function updateExpenseList() {
   const list = document.getElementById("expense-list");
-  list.innerHTML = "";  // clear previous list
+  list.innerHTML = "";
 
   expenses.forEach((exp, index) => {
     const item = document.createElement("li");
+
     item.innerHTML = `
-      <strong>${exp.description}</strong><br>
-      ₹${exp.amount} <span class="category">[${exp.category}]</span>
+      <div class="expense-item">
+        <div>
+          <strong>${exp.description}</strong><br>
+          ₹${exp.amount} <span class="category">[${exp.category}]</span>
+        </div>
+        <button class="delete-btn" onclick="deleteExpense(${index})">
+          <i class="fa-solid fa-trash"></i>
+        </button>
+      </div>
     `;
+
     list.appendChild(item);
   });
 }
+
+function deleteExpense(index) {
+  expenses.splice(index, 1); // remove item from array
+  localStorage.setItem("expenses", JSON.stringify(expenses)); // update localStorage
+  updateExpenseList();
+  updateSummary();
+}
+
 
 function updateSummary() {
   const totalSpent = expenses.reduce((sum, exp) => sum + exp.amount, 0);
