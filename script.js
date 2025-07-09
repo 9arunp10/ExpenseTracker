@@ -56,11 +56,15 @@ function addExpense() {
   document.getElementById("amount").value = "";
 }
 
-function updateExpenseList() {
+function updateExpenseList(filterCategory = "All") {
   const list = document.getElementById("expense-list");
   list.innerHTML = "";
 
-  expenses.forEach((exp, index) => {
+  const filteredExpenses = filterCategory === "All"
+    ? expenses
+    : expenses.filter(exp => exp.category === filterCategory);
+
+  filteredExpenses.forEach((exp, index) => {
     const item = document.createElement("li");
 
     item.innerHTML = `
@@ -79,11 +83,17 @@ function updateExpenseList() {
   });
 }
 
+
 function deleteExpense(index) {
   expenses.splice(index, 1); // remove item from array
   localStorage.setItem("expenses", JSON.stringify(expenses)); // update localStorage
   updateExpenseList();
   updateSummary();
+}
+
+function filterExpenses() {
+  const selectedCategory = document.getElementById("filter").value;
+  updateExpenseList(selectedCategory);
 }
 
 
