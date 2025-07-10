@@ -14,6 +14,7 @@ window.onload = function () {
   }
 
   updateSummary();
+  updateChart();
 };
 
 function setBudget() {
@@ -51,6 +52,7 @@ function addExpense() {
   localStorage.setItem("expenses", JSON.stringify(expenses)); // 🔐 Save to localStorage
   updateExpenseList(); // show on screen
   updateSummary();
+  updateChart(); // right after updateSummary();
   // Clear inputs
   document.getElementById("desc").value = "";
   document.getElementById("amount").value = "";
@@ -118,4 +120,43 @@ function resetTracker() {
   document.getElementById("expense-list").innerHTML = "";
   document.getElementById("total-spent").textContent = "0";
   document.getElementById("remaining").textContent = "0";
+}
+
+let chart = null;
+
+function updateChart() {
+  const categoryTotals = {};
+
+  expenses.forEach(exp => {
+    categoryTotals[exp.category] = (categoryTotals[exp.category] || 0) + exp.amount;
+  });
+
+  const labels = Object.keys(categoryTotals);
+  const data = Object.values(categoryTotals);
+  const colors = ['#3498db', '#e67e22', '#9b59b6', '#2ecc71', '#e74c3c'];
+  const ctx = document.getElementById('expense-chart').getContext('2d');
+
+  // If chart already exists, destroy and recreate it
+  if (chart) chart.destroy();
+
+  chart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Expenses by Category',
+        data: data,
+        backgroundColor: colors.slice(0, labels.length),
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'bottom'
+        }
+      }
+    }
+  });
 }
