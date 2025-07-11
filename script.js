@@ -160,3 +160,26 @@ function updateChart() {
     }
   });
 }
+
+function exportToCSV() {
+  if (expenses.length === 0) {
+    alert("No expenses to export!");
+    return;
+  }
+
+  let csvContent = "Description,Amount,Category\n";
+
+  expenses.forEach(exp => {
+    csvContent += `"${exp.description}",${exp.amount},"${exp.category}"\n`;
+  });
+
+  const blob = new Blob([csvContent], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+
+  a.href = url;
+  a.download = "expenses.csv";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
