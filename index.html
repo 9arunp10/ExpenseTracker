@@ -8,67 +8,89 @@
 </head>
 <body>
 
-  <div class="container">
-  <h1 class="logo">PEX <i class="fa-solid fa-wallet"></i></h1>
-
-  <div class="main-layout">
-    <!-- Left Section -->
-    <div class="left-panel">
-      <!-- Budget Section -->
-      <div id="budget-section">
-        <label for="budget">Set Monthly Budget:</label>
-        <input type="number" id="budget" placeholder="e.g. 5000">
-        <button onclick="setBudget()">Set Budget</button>
-        <p id="budget-display">Budget: ₹0</p>
-      </div>
-
-      <!-- Add Expense Section -->
-      <div id="add-expense-section">
-        <h2>Add Expense</h2>
-        <textarea id="desc" rows="2" placeholder="Enter expense details..."></textarea>
-        <input type="number" id="amount" placeholder="Amount">
-        <select id="category">
-          <option>Food</option>
-          <option>Transport</option>
-          <option>Entertainment</option>
-          <option>Utilities</option>
-          <option>Other</option>
-        </select>
-        <button onclick="addExpense()">Add Expense</button>
-      </div>
-
-      <!-- Filter Section -->
-      <div id="filter-section">
-        <label for="filter">Filter by Category:</label>
-        <select id="filter" onchange="filterExpenses()">
-          <option value="All">All</option>
-          <option value="Food">Food</option>
-          <option value="Transport">Transport</option>
-          <option value="Entertainment">Entertainment</option>
-          <option value="Utilities">Utilities</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
-      <h2>Expenses</h2>
-      <ul id="expense-list"></ul>
-    </div>
-
-    <!-- Right Section -->
-    <div class="right-panel">
-      <h2>Summary</h2>
-      <p>Total Spent: ₹<span id="total-spent">0</span></p>
-      <p>Remaining: ₹<span id="remaining">0</span></p>
-
-      <h2>Expense Chart</h2>
-      <canvas id="expense-chart" width="300" height="300"></canvas>
-
-      <button id="reset-btn" onclick="resetTracker()">Reset All</button>
-      <button id="export-btn" onclick="exportToCSV()">Export to CSV</button>
-
+  <!-- Login Screen -->
+  <div id="login-screen">
+    <div class="login-box">
+      <h2>Welcome to PEX</h2>
+      <p>Enter your name to get started</p>
+      <input type="text" id="username" placeholder="Your Name">
+      <button onclick="startApp()">Start Tracking</button>
     </div>
   </div>
 
+  <!-- Main App -->
+  <div class="app" id="main-app" style="display: none;">
+    <div class="container">
+      <!-- Header -->
+      <div class="header-bar">
+        <h1 class="logo">PEX <i class="fa-solid fa-wallet"></i></h1>
+        <div class="user-info">
+          <span id="greeting">Welcome, Arun</span>
+          <button id="logout-btn" onclick="logout()">Logout</button>
+        </div>
+      </div>
 
+
+      <div class="main-layout">
+        <!-- Left Panel -->
+        <div class="left-panel">
+          <!-- Budget Section -->
+          <div id="budget-section">
+            <label for="budget">Set Monthly Budget:</label>
+            <input type="number" id="budget" placeholder="e.g. 5000">
+            <button onclick="setBudget()">Set Budget</button>
+            <p id="budget-display">Budget: ₹0</p>
+          </div>
+
+          <!-- Add Expense Section -->
+          <div id="add-expense-section">
+            <h2>Add Expense</h2>
+            <textarea id="desc" rows="2" placeholder="Enter expense details..."></textarea>
+            <input type="number" id="amount" placeholder="Amount">
+            <select id="category">
+              <option>Food</option>
+              <option>Transport</option>
+              <option>Entertainment</option>
+              <option>Utilities</option>
+              <option>Other</option>
+            </select>
+            <button onclick="addExpense()">Add Expense</button>
+          </div>
+
+          <!-- Filter Section -->
+          <div id="filter-section">
+            <label for="filter">Filter by Category:</label>
+            <select id="filter" onchange="filterExpenses()">
+              <option value="All">All</option>
+              <option value="Food">Food</option>
+              <option value="Transport">Transport</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Utilities">Utilities</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <h2>Expenses</h2>
+          <ul id="expense-list"></ul>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel">
+          <h2>Summary</h2>
+          <p>Total Spent: ₹<span id="total-spent">0</span></p>
+          <p>Remaining: ₹<span id="remaining">0</span></p>
+
+          <h2>Expense Chart</h2>
+          <canvas id="expense-chart" width="300" height="300"></canvas>
+
+          <button id="reset-btn" onclick="resetTracker()">Reset All</button>
+          <button id="export-btn" onclick="exportToCSV()">Export to CSV</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
   <script src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>

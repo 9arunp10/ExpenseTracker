@@ -3,6 +3,7 @@ let expenses = [];
 let budget = 0;
 // Load saved data on page load
 window.onload = function () {
+  showApp(); // show dashboard if name already saved
   if (localStorage.getItem("budget")) {
     budget = parseFloat(localStorage.getItem("budget"));
     document.getElementById("budget-display").textContent = `Budget: ₹${budget}`;
@@ -182,4 +183,35 @@ function exportToCSV() {
   a.click();
 
   URL.revokeObjectURL(url);
+}
+
+function startApp() {
+  const name = document.getElementById("username").value.trim();
+
+  if (!name) {
+    alert("Please enter your name.");
+    return;
+  }
+
+  localStorage.setItem("username", name);
+  showApp();
+}
+
+function showApp() {
+  const user = localStorage.getItem("username");
+
+  if (user) {
+    document.getElementById("greeting").textContent = `Welcome, ${user} 👋`;
+    document.getElementById("login-screen").style.display = "none";
+    document.getElementById("main-app").style.display = "block";
+  }
+}
+
+function logout() {
+  // Clear local storage or session
+  localStorage.clear();
+  sessionStorage.clear();
+
+  // Optional: reload page or redirect to login
+  location.reload();
 }
