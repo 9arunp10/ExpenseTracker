@@ -2,21 +2,38 @@
 let expenses = [];
 let budget = 0;
 // Load saved data on page load
-window.onload = function () {
-  showApp(); // show dashboard if name already saved
-  if (localStorage.getItem("budget")) {
-    budget = parseFloat(localStorage.getItem("budget"));
+window.onload = () => {
+  /* ---------- 1. Auto‑login ---------- */
+  const savedUser = localStorage.getItem("username");
+  if (savedUser) showApp(savedUser); // showApp handles greeting + UI switch
+  else {
+    // Keep login screen visible, hide app
+    document.getElementById("login-screen").style.display = "flex";
+    document.getElementById("main-app").style.display = "none";
+  }
+  /* ---------- 2. Restore budget ---------- */
+  const savedBudget = localStorage.getItem("budget");
+  if (savedBudget) {
+    budget = parseFloat(savedBudget);
     document.getElementById("budget-display").textContent = `Budget: ₹${budget}`;
   }
-
-  if (localStorage.getItem("expenses")) {
-    expenses = JSON.parse(localStorage.getItem("expenses"));
-    updateExpenseList();
+  /* ---------- 3. Restore expenses ---------- */
+  const savedExpenses = localStorage.getItem("expenses");
+  if (savedExpenses) {
+    expenses = JSON.parse(savedExpenses);
+  }
+  function toggleTheme() {
+    const isDark = document.getElementById("darkModeToggle").checked;
+    document.body.classList.toggle("dark", isDark);
+    localStorage.setItem("darkMode", isDark ? "enabled" : "disabled");
   }
 
-  updateSummary();
-  updateChart();
+  /* ---------- 4. Refresh UI ---------- */
+  updateExpenseList();   // draws list (handles empty array gracefully)
+  updateSummary();       // recalculates totals
+  updateChart();         // redraws pie chart
 };
+
 
 function setBudget() {
   const budgetInput = document.getElementById("budget");
@@ -194,24 +211,37 @@ function startApp() {
   }
 
   localStorage.setItem("username", name);
-  showApp();
+  showApp(name);
 }
 
-function showApp() {
-  const user = localStorage.getItem("username");
+function showApp(userName) {
+  const name = userName || localStorage.getItem("username");
+  if (!name) return;                          // safety check
 
-  if (user) {
-    document.getElementById("greeting").textContent = `Welcome, ${user} 👋`;
-    document.getElementById("login-screen").style.display = "none";
-    document.getElementById("main-app").style.display = "block";
-  }
+  // format today’s date, e.g. “22 June 2025”
+  const today = new Date().toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+  document.getElementById("greeting").textContent = `Welcome, ${name} — ${today}`;
+  document.getElementById("login-screen").style.display = "none";
+  document.getElementById("main-app").style.display = "block";
 }
 
 function logout() {
-  // Clear local storage or session
+  // Optional: clear stored user data (if using localStorage/sessionStorage)
   localStorage.clear();
-  sessionStorage.clear();
 
-  // Optional: reload page or redirect to login
-  location.reload();
+  // Reset UI and go back to login screen
+  document.getElementById('main-app').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('username').value = '';
+}
+
+function toggleTheme() {
+  const isDark = document.getElementById("darkModeToggle").checked;
+  document.body.classList.toggle("dark", isDark);
+  localStorage.setItem("darkMode", isDark ? "enabled" : "disabled");
 }

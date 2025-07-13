@@ -280,31 +280,47 @@ h2 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
 }
 
-/* User Info */
+/* Logo */
+.logo {
+  color: #e74c3c;
+  font-size: 32px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo i {
+  color: #2ecc71;
+  font-size: 24px;
+}
+
+/* User Info Section */
 .user-info {
   display: flex;
   align-items: center;
-  gap: 15px;
-  margin-top: -25px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
-/* Greeting Text */
 #greeting {
-  font-size: 26px;
+  font-size: 16px;
   font-weight: 500;
-  color: #2c3e50;
+  color: #007fff;
 }
 
-/* Logout Button */
 #logout-btn {
-  padding: 8px 16px;
-  background-color: #e74c3c;
-  color: white;
+  padding: 6px 14px;
   font-size: 14px;
-  border: none;
   border-radius: 6px;
+  background-color: #e74c3c;
+  border: none;
+  color: white;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -312,3 +328,46 @@ h2 {
 #logout-btn:hover {
   background-color: #c0392b;
 }
+
+.theme-toggle {
+  font-size: 14px;
+  color: #0080ff;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+
+body.dark {
+  background-color: #121212;
+  color: #f1f1f1;
+}
+
+body.dark .container,
+body.dark .left-panel,
+body.dark .right-panel,
+body.dark .login-box {
+  background-color: #1e1e1e;
+  color: #f1f1f1;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
+}
+
+body.dark input,
+body.dark textarea,
+body.dark select {
+  background-color: #2a2a2a;
+  color: #ffffff;
+  border: 1px solid #444;
+}
+
+body.dark button {
+  background-color: #444 !important;
+  color: #fff;
+}
+
+body.dark #logout-btn,
+body.dark #reset-btn,
+body.dark #export-btn {
+  background-color: #e74c3c !important;
+}
+
