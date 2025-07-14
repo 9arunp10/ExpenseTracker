@@ -32,6 +32,7 @@ window.onload = () => {
   updateExpenseList();   // draws list (handles empty array gracefully)
   updateSummary();       // recalculates totals
   updateChart();         // redraws pie chart
+  updateMonthlySummary();
 };
 
 
@@ -244,4 +245,29 @@ function toggleTheme() {
   const isDark = document.getElementById("darkModeToggle").checked;
   document.body.classList.toggle("dark", isDark);
   localStorage.setItem("darkMode", isDark ? "enabled" : "disabled");
+}
+
+function updateMonthlySummary() {
+  if (!expenses || expenses.length === 0) {
+    document.getElementById('summary-total').textContent = 0;
+    document.getElementById('most-category').textContent = '-';
+    document.getElementById('least-category').textContent = '-';
+    return;
+  }
+
+  let categoryTotals = {};
+  let total = 0;
+
+  expenses.forEach(exp => {
+    const cat = exp.category;
+    const amt = parseFloat(exp.amount);
+    categoryTotals[cat] = (categoryTotals[cat] || 0) + amt;
+    total += amt;
+  });
+
+  const sorted = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1]);
+
+  document.getElementById('summary-total').textContent = total;
+  document.getElementById('most-category').textContent = `${sorted[0][0]} (₹${sorted[0][1]})`;
+  document.getElementById('least-category').textContent = `${sorted[sorted.length - 1][0]} (₹${sorted[sorted.length - 1][1]})`;
 }

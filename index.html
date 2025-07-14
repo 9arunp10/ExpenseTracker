@@ -85,8 +85,14 @@
           <p>Remaining: ₹<span id="remaining">0</span></p>
 
           <h2>Expense Chart</h2>
-          <canvas id="expense-chart" width="300" height="300"></canvas>
-
+          <canvas id="expense-chart" width="100" height="100"></canvas>
+          <!-- Monthly Summary Report -->
+          <h2>Monthly Summary</h2>
+          <ul id="summary-report">
+            <li>Total Expenses: ₹<span id="summary-total">0</span></li>
+            <li>Most Spent On: <span id="most-category">-</span></li>
+            <li>Least Spent On: <span id="least-category">-</span></li>
+          </ul>
           <button id="reset-btn" onclick="resetTracker()">Reset All</button>
           <button id="export-btn" onclick="exportToCSV()">Export to CSV</button>
         </div>
