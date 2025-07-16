@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Expense Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PEX - Expense Tracker</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
 </head>
@@ -21,48 +22,49 @@
   <!-- Main App -->
   <div class="app" id="main-app" style="display: none;">
     <div class="container">
+
       <!-- Header -->
-      <div class="header-bar">
-        <h1 class="logo">PEX <i class="fa-solid fa-wallet"></i></h1>
+      <header class="header-bar">
+        <div class="logo">PEX <i class="fa-solid fa-wallet"></i></div>
         <div class="user-info">
           <span id="greeting">Welcome, Arun</span>
           <button id="logout-btn" onclick="logout()">Logout</button>
-          <label class="theme-toggle">
-            <input type="checkbox" id="darkModeToggle" onchange="toggleTheme()">
-            🌙 Dark Mode
-          </label>
         </div>
-      </div>
+      </header>
 
+      <!-- Dashboard Layout -->
+      <section class="dashboard-grid">
 
-      <div class="main-layout">
-        <!-- Left Panel -->
-        <div class="left-panel">
-          <!-- Budget Section -->
-          <div id="budget-section">
-            <label for="budget">Set Monthly Budget:</label>
-            <input type="number" id="budget" placeholder="e.g. 5000">
-            <button onclick="setBudget()">Set Budget</button>
-            <p id="budget-display">Budget: ₹0</p>
-          </div>
+        <!-- Budget Panel -->
+        <div class="card">
+          <h3>Set Monthly Budget</h3>
+          <input type="number" id="budget" placeholder="e.g. 5000">
+          <button onclick="setBudget()">Set Budget</button>
+          <p id="budget-display">Budget: ₹0</p>
+        </div>
 
-          <!-- Add Expense Section -->
-          <div id="add-expense-section">
-            <h2>Add Expense</h2>
-            <textarea id="desc" rows="2" placeholder="Enter expense details..."></textarea>
-            <input type="number" id="amount" placeholder="Amount">
-            <select id="category">
-              <option>Food</option>
-              <option>Transport</option>
-              <option>Entertainment</option>
-              <option>Utilities</option>
-              <option>Other</option>
-            </select>
-            <button onclick="addExpense()">Add Expense</button>
-          </div>
+        <!-- Add Expense -->
+        <div class="card">
+          <h3>Add Expense</h3>
+          <textarea id="desc" rows="2" placeholder="Enter expense details..."></textarea>
+          <input type="number" id="amount" placeholder="Amount">
+          <select id="category">
+            <option>Food</option>
+            <option>Transport</option>
+            <option>Entertainment</option>
+            <option>Utilities</option>
+            <option>Other</option>
+          </select>
+          <button onclick="addExpense()">Add Expense</button>
+        </div>
 
-          <!-- Filter Section -->
-          <div id="filter-section">
+        <div class="card card-coming-soon">
+          Coming Soon
+        </div>
+
+        <!-- Filter + Expense List -->
+        <div class="card wide">
+          <div class="filter-section">
             <label for="filter">Filter by Category:</label>
             <select id="filter" onchange="filterExpenses()">
               <option value="All">All</option>
@@ -73,30 +75,37 @@
               <option value="Other">Other</option>
             </select>
           </div>
-
-          <h2>Expenses</h2>
+          <h3>Expenses</h3>
           <ul id="expense-list"></ul>
         </div>
 
-        <!-- Right Panel -->
-        <div class="right-panel">
-          <h2>Summary</h2>
+        <!-- Summary -->
+        <div class="card">
+          <h3>Summary</h3>
           <p>Total Spent: ₹<span id="total-spent">0</span></p>
           <p>Remaining: ₹<span id="remaining">0</span></p>
+          <button id="reset-btn" onclick="resetTracker()">Reset All</button>
+          <button id="export-btn" onclick="exportToCSV()">Export to CSV</button>
+        </div>
 
-          <h2>Expense Chart</h2>
+        <!-- Chart -->
+        <div class="card">
+          <h3>Expense Chart</h3>
           <canvas id="expense-chart" width="100" height="100"></canvas>
-          <!-- Monthly Summary Report -->
-          <h2>Monthly Summary</h2>
+        </div>
+
+        <!-- Monthly Summary -->
+        <div class="card wide">
+          <h3>Monthly Summary</h3>
+          <div id="category-bars"></div>
           <ul id="summary-report">
             <li>Total Expenses: ₹<span id="summary-total">0</span></li>
             <li>Most Spent On: <span id="most-category">-</span></li>
             <li>Least Spent On: <span id="least-category">-</span></li>
           </ul>
-          <button id="reset-btn" onclick="resetTracker()">Reset All</button>
-          <button id="export-btn" onclick="exportToCSV()">Export to CSV</button>
         </div>
-      </div>
+
+      </section>
     </div>
   </div>
 

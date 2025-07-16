@@ -72,6 +72,8 @@ function addExpense() {
   updateExpenseList(); // show on screen
   updateSummary();
   updateChart(); // right after updateSummary();
+  updateCategoryBars(); // ✅ update category progress bars
+
   // Clear inputs
   document.getElementById("desc").value = "";
   document.getElementById("amount").value = "";
@@ -123,13 +125,13 @@ function updateSummary() {
   document.getElementById("total-spent").textContent = totalSpent;
   const remaining = budget - totalSpent;
   document.getElementById("remaining").textContent = remaining >= 0 ? remaining : 0;
+  updateCategoryBars();
 }
 
 function resetTracker() {
   const confirmReset = confirm("Are you sure you want to clear all data?");
   if (!confirmReset) return;
 
-  // Clear local storage and variables
   localStorage.clear();
   expenses = [];
   budget = 0;
@@ -139,6 +141,8 @@ function resetTracker() {
   document.getElementById("expense-list").innerHTML = "";
   document.getElementById("total-spent").textContent = "0";
   document.getElementById("remaining").textContent = "0";
+  document.getElementById("category-bars").innerHTML = ""; // ✅ clear category bars
+  updateChart();
 }
 
 let chart = null;
@@ -270,4 +274,33 @@ function updateMonthlySummary() {
   document.getElementById('summary-total').textContent = total;
   document.getElementById('most-category').textContent = `${sorted[0][0]} (₹${sorted[0][1]})`;
   document.getElementById('least-category').textContent = `${sorted[sorted.length - 1][0]} (₹${sorted[sorted.length - 1][1]})`;
+}
+
+function updateCategoryBars() {
+  const categoryTotals = {};
+  let totalSpent = 0;
+
+  expenses.forEach(exp => {
+    const category = exp.category;
+    const amount = parseFloat(exp.amount);
+    totalSpent += amount;
+    categoryTotals[category] = (categoryTotals[category] || 0) + amount;
+  });
+
+  const barContainer = document.getElementById("category-bars");
+  barContainer.innerHTML = '';
+
+  for (const cat in categoryTotals) {
+    const percent = ((categoryTotals[cat] / totalSpent) * 100).toFixed(1);
+
+    const bar = `
+      <div class="category-bar">
+      <span>${cat}: ₹${categoryTotals[cat]} (${percent}%)</span>
+      <div class="progress">
+        <div class="fill" style="width: ${percent}%;"></div>
+      </div>
+      </div>
+    `;
+    barContainer.innerHTML += bar;
+  }
 }
