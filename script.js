@@ -3,35 +3,30 @@ let expenses = [];
 let budget = 0;
 // Load saved data on page load
 window.onload = () => {
-  /* ---------- 1. Auto‑login ---------- */
   const savedUser = localStorage.getItem("username");
-  if (savedUser) showApp(savedUser); // showApp handles greeting + UI switch
+  if (savedUser) showApp(savedUser);
   else {
-    // Keep login screen visible, hide app
     document.getElementById("login-screen").style.display = "flex";
     document.getElementById("main-app").style.display = "none";
   }
-  /* ---------- 2. Restore budget ---------- */
+
   const savedBudget = localStorage.getItem("budget");
   if (savedBudget) {
     budget = parseFloat(savedBudget);
     document.getElementById("budget-display").textContent = `Budget: ₹${budget}`;
   }
-  /* ---------- 3. Restore expenses ---------- */
+
   const savedExpenses = localStorage.getItem("expenses");
   if (savedExpenses) {
     expenses = JSON.parse(savedExpenses);
   }
-  function toggleTheme() {
-    const isDark = document.getElementById("darkModeToggle").checked;
-    document.body.classList.toggle("dark", isDark);
-    localStorage.setItem("darkMode", isDark ? "enabled" : "disabled");
-  }
 
-  /* ---------- 4. Refresh UI ---------- */
-  updateExpenseList();   // draws list (handles empty array gracefully)
-  updateSummary();       // recalculates totals
-  updateChart();         // redraws pie chart
+  // ✅ Apply saved dark mode
+  applySavedTheme();
+
+  updateExpenseList();
+  updateSummary();
+  updateChart();
   updateMonthlySummary();
 };
 
@@ -245,11 +240,20 @@ function logout() {
   document.getElementById('username').value = '';
 }
 
-function toggleTheme() {
+// DARK MODE: Persist and Toggle
+function applySavedTheme() {
+  const darkModeSetting = localStorage.getItem("darkMode");
+  const isDark = darkModeSetting === "enabled";
+  document.body.classList.toggle("dark", isDark);
+  document.getElementById("darkModeToggle").checked = isDark;
+}
+
+function toggleDarkMode() {
   const isDark = document.getElementById("darkModeToggle").checked;
   document.body.classList.toggle("dark", isDark);
   localStorage.setItem("darkMode", isDark ? "enabled" : "disabled");
 }
+
 
 function updateMonthlySummary() {
   if (!expenses || expenses.length === 0) {
