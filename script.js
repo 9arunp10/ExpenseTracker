@@ -1,6 +1,11 @@
 // Set Budget and Show It
 let expenses = [];
 let budget = 0;
+let currencySymbol = "₹";
+let trendsChart = null;
+
+const currencyMap = { INR: "₹", USD: "$", EUR: "€" };
+
 // Load saved data on page load
 window.onload = () => {
   const savedUser = localStorage.getItem("username");
@@ -13,7 +18,6 @@ window.onload = () => {
   const savedBudget = localStorage.getItem("budget");
   if (savedBudget) {
     budget = parseFloat(savedBudget);
-    document.getElementById("budget-display").textContent = `Budget: ₹${budget}`;
   }
 
   const savedExpenses = localStorage.getItem("expenses");
@@ -21,15 +25,40 @@ window.onload = () => {
     expenses = JSON.parse(savedExpenses);
   }
 
+  // Currency
+  const savedCurrency = localStorage.getItem("currency");
+  if (savedCurrency && currencyMap[savedCurrency]) {
+    currencySymbol = currencyMap[savedCurrency];
+    document.getElementById("currency-select").value = savedCurrency;
+  }
+
   // ✅ Apply saved dark mode
   applySavedTheme();
 
+  updateCurrencyDisplay();
   updateExpenseList();
   updateSummary();
   updateChart();
   updateMonthlySummary();
+  updateTrendsChart(expenses);
 };
 
+function changeCurrency() {
+  const select = document.getElementById("currency-select");
+  currencySymbol = currencyMap[select.value];
+  localStorage.setItem("currency", select.value);
+  updateCurrencyDisplay();
+  updateChart();
+  updateMonthlySummary();
+  updateTrendsChart(expenses);
+}
+
+function updateCurrencyDisplay() {
+  document.getElementById("budget-display").textContent = `Budget: ${currencySymbol}${budget}`;
+  document.getElementById("total-spent").parentElement.innerHTML = `Total Spent: ${currencySymbol}<span id="total-spent">${expenses.reduce((sum, exp) => sum + exp.amount, 0)}</span>`;
+  document.getElementById("remaining").parentElement.innerHTML = `Remaining: ${currencySymbol}<span id="remaining">${budget - expenses.reduce((sum, exp) => sum + exp.amount, 0)}</span>`;
+  document.getElementById("summary-total").textContent = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+}
 
 function setBudget() {
   const budgetInput = document.getElementById("budget");
@@ -41,16 +70,12 @@ function setBudget() {
   }
 
   budget = budgetValue;
-  localStorage.setItem("budget", budget); // 🔐 Save to localStorage
-  // Show it on the page
-  document.getElementById("budget-display").textContent = `Budget: ₹${budget}`;
+  localStorage.setItem("budget", budget);
+  updateCurrencyDisplay();
   updateSummary();
-  // Clear the input field after setting
   budgetInput.value = "";
 }
 
-//  Add Expense Input Handler (basic skeleton)
-// global array to store expense data
 function addExpense() {
   const desc = document.getElementById("desc").value;
   const amount = parseFloat(document.getElementById("amount").value);
@@ -61,15 +86,21 @@ function addExpense() {
     return;
   }
 
-  const expense = { description: desc, amount, category };
-  expenses.push(expense); // add to global array
-  localStorage.setItem("expenses", JSON.stringify(expenses)); // 🔐 Save to localStorage
-  updateExpenseList(); // show on screen
+  const expense = {
+    description: desc,
+    amount,
+    category,
+    date: new Date().toLocaleDateString("en-IN")
+  };
+  expenses.push(expense);
+  localStorage.setItem("expenses", JSON.stringify(expenses));
+  updateExpenseList();
   updateSummary();
-  updateChart(); // right after updateSummary();
-  updateCategoryBars(); // ✅ update category progress bars
+  updateChart();
+  updateCategoryBars();
+  updateMonthlySummary();
+  updateTrendsChart(expenses);
 
-  // Clear inputs
   document.getElementById("desc").value = "";
   document.getElementById("amount").value = "";
 }
@@ -84,29 +115,30 @@ function updateExpenseList(filterCategory = "All") {
 
   filteredExpenses.forEach((exp, index) => {
     const item = document.createElement("li");
-
     item.innerHTML = `
       <div class="expense-item">
         <div>
           <strong>${exp.description}</strong><br>
-          ₹${exp.amount} <span class="category">[${exp.category}]</span>
+          ${currencySymbol}${exp.amount} <span class="category">[${exp.category}]</span>
         </div>
         <button class="delete-btn" onclick="deleteExpense(${index})">
           <i class="fa-solid fa-trash"></i>
         </button>
       </div>
     `;
-
     list.appendChild(item);
   });
 }
 
-
 function deleteExpense(index) {
-  expenses.splice(index, 1); // remove item from array
-  localStorage.setItem("expenses", JSON.stringify(expenses)); // update localStorage
+  expenses.splice(index, 1);
+  localStorage.setItem("expenses", JSON.stringify(expenses));
   updateExpenseList();
   updateSummary();
+  updateChart();
+  updateCategoryBars();
+  updateMonthlySummary();
+  updateTrendsChart(expenses);
 }
 
 function filterExpenses() {
@@ -114,8 +146,8 @@ function filterExpenses() {
   updateExpenseList(selectedCategory);
 }
 
-
 function updateSummary() {
+  updateCurrencyDisplay();
   const totalSpent = expenses.reduce((sum, exp) => sum + exp.amount, 0);
   document.getElementById("total-spent").textContent = totalSpent;
   const remaining = budget - totalSpent;
@@ -131,13 +163,14 @@ function resetTracker() {
   expenses = [];
   budget = 0;
 
-  // Clear UI
-  document.getElementById("budget-display").textContent = "Budget: ₹0";
+  document.getElementById("budget-display").textContent = `Budget: ${currencySymbol}0`;
   document.getElementById("expense-list").innerHTML = "";
   document.getElementById("total-spent").textContent = "0";
   document.getElementById("remaining").textContent = "0";
-  document.getElementById("category-bars").innerHTML = ""; // ✅ clear category bars
+  document.getElementById("category-bars").innerHTML = "";
   updateChart();
+  updateTrendsChart(expenses);
+  updateMonthlySummary();
 }
 
 let chart = null;
@@ -154,7 +187,6 @@ function updateChart() {
   const colors = ['#3498db', '#e67e22', '#9b59b6', '#2ecc71', '#e74c3c'];
   const ctx = document.getElementById('expense-chart').getContext('2d');
 
-  // If chart already exists, destroy and recreate it
   if (chart) chart.destroy();
 
   chart = new Chart(ctx, {
@@ -179,16 +211,53 @@ function updateChart() {
   });
 }
 
+function updateTrendsChart(expensesArr) {
+  const ctx = document.getElementById('trends-chart').getContext('2d');
+  const dates = expensesArr.map(e => e.date);
+  const amounts = expensesArr.map(e => e.amount);
+
+  if (trendsChart) trendsChart.destroy();
+  trendsChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: dates,
+      datasets: [{
+        label: 'Expenses Over Time',
+        data: amounts,
+        borderColor: 'blue',
+        fill: false
+      }]
+    }
+  });
+}
+
+function showAnalytics() {
+  const modal = document.getElementById("analytics-modal");
+  const content = document.getElementById("analytics-content");
+  let avg = (expenses.length ? (expenses.reduce((a,e)=>a+e.amount,0)/expenses.length).toFixed(2) : 0);
+  let max = expenses.length ? Math.max(...expenses.map(e=>e.amount)) : 0;
+  let min = expenses.length ? Math.min(...expenses.map(e=>e.amount)) : 0;
+  content.innerHTML = `
+    <p>Average Expense: ${currencySymbol}${avg}</p>
+    <p>Max Expense: ${currencySymbol}${max}</p>
+    <p>Min Expense: ${currencySymbol}${min}</p>
+  `;
+  modal.style.display = "block";
+}
+function closeAnalytics() {
+  document.getElementById("analytics-modal").style.display = "none";
+}
+
 function exportToCSV() {
   if (expenses.length === 0) {
     alert("No expenses to export!");
     return;
   }
 
-  let csvContent = "Description,Amount,Category\n";
+  let csvContent = "Description,Amount,Category,Date\n";
 
   expenses.forEach(exp => {
-    csvContent += `"${exp.description}",${exp.amount},"${exp.category}"\n`;
+    csvContent += `"${exp.description}",${exp.amount},"${exp.category}","${exp.date}"\n`;
   });
 
   const blob = new Blob([csvContent], { type: "text/csv" });
@@ -216,9 +285,8 @@ function startApp() {
 
 function showApp(userName) {
   const name = userName || localStorage.getItem("username");
-  if (!name) return;                          // safety check
+  if (!name) return;
 
-  // format today’s date, e.g. “22 June 2025”
   const today = new Date().toLocaleDateString("en-IN", {
     day: "numeric",
     month: "long",
@@ -231,10 +299,7 @@ function showApp(userName) {
 }
 
 function logout() {
-  // Optional: clear stored user data (if using localStorage/sessionStorage)
   localStorage.clear();
-
-  // Reset UI and go back to login screen
   document.getElementById('main-app').style.display = 'none';
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('username').value = '';
@@ -253,7 +318,6 @@ function toggleDarkMode() {
   document.body.classList.toggle("dark", isDark);
   localStorage.setItem("darkMode", isDark ? "enabled" : "disabled");
 }
-
 
 function updateMonthlySummary() {
   if (!expenses || expenses.length === 0) {
@@ -276,8 +340,8 @@ function updateMonthlySummary() {
   const sorted = Object.entries(categoryTotals).sort((a, b) => b[1] - a[1]);
 
   document.getElementById('summary-total').textContent = total;
-  document.getElementById('most-category').textContent = `${sorted[0][0]} (₹${sorted[0][1]})`;
-  document.getElementById('least-category').textContent = `${sorted[sorted.length - 1][0]} (₹${sorted[sorted.length - 1][1]})`;
+  document.getElementById('most-category').textContent = `${sorted[0][0]} (${currencySymbol}${sorted[0][1]})`;
+  document.getElementById('least-category').textContent = `${sorted[sorted.length - 1][0]} (${currencySymbol}${sorted[sorted.length - 1][1]})`;
 }
 
 function updateCategoryBars() {
@@ -299,7 +363,7 @@ function updateCategoryBars() {
 
     const bar = `
       <div class="category-bar">
-      <span>${cat}: ₹${categoryTotals[cat]} (${percent}%)</span>
+      <span>${cat}: ${currencySymbol}${categoryTotals[cat]} (${percent}%)</span>
       <div class="progress">
         <div class="fill" style="width: ${percent}%;"></div>
       </div>

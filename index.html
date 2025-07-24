@@ -33,6 +33,12 @@
             <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
             <span class="slider"></span> 🌙 Dark Mode
           </label>
+          <!-- Currency Dropdown -->
+          <select id="currency-select" onchange="changeCurrency()">
+            <option value="INR">₹ INR</option>
+            <option value="USD">$ USD</option>
+            <option value="EUR">€ EUR</option>
+          </select>
         </div>
       </header>
 
@@ -63,7 +69,13 @@
         </div>
 
         <div class="card card-coming-soon">
-          Coming Soon
+          <div class="coming-soon-content">
+            <h3>🚧 Coming Soon</h3>
+            <ul class="coming-soon-list">
+              <li><i class="fas fa-chart-line"></i> Expense Trends & Analytics</li>
+              <li><i class="fas fa-globe"></i> Multi-Currency & Language Support</li>
+            </ul>
+          </div>
         </div>
 
         <!-- Filter + Expense List -->
@@ -109,6 +121,20 @@
           </ul>
         </div>
 
+        <!-- Expense Trends Card -->
+        <div class="card wide">
+          <h3>Expense Trends</h3>
+          <canvas id="trends-chart" width="400" height="100"></canvas>
+          <button onclick="showAnalytics()">Show Analytics</button>
+        </div>
+
+        <!-- Analytics Modal -->
+        <div id="analytics-modal" style="display:none; position:fixed; top:10%; left:50%; transform:translateX(-50%); background:#fff; border:1px solid #ccc; padding:20px; z-index:1000;">
+          <h3>Expense Analytics</h3>
+          <div id="analytics-content"></div>
+          <button onclick="closeAnalytics()">Close</button>
+        </div>
+
       </section>
     </div>
   </div>
@@ -117,4 +143,3 @@
   <script src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
-</html>
